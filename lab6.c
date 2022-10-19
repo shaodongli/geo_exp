@@ -36,7 +36,6 @@ int get_index_in_Model(const double depth, Model * vel, const int n)
     
     for (int i = 0; i < n - 1; i++)
     {
-        // printf("depth = %lf, vel_left = %lf, vel_right = %lf\n", depth, vel[i].d, vel[i+1].d);
         if ( (depth - vel[i].d) * (depth - vel[i+1].d) < 0)
         {
             index = i;
@@ -50,7 +49,6 @@ int get_index_in_Model(const double depth, Model * vel, const int n)
 int get_horizontal_distance_and_traveltime_Model(double depth, double theta, Model * vel, const int n, double * x, double * t)
 {
     int ni = get_index_in_Model(depth, vel, n);
-    // printf("index = %d\n", ni);
     if (ni < 0)
         return ni;
     // this function assumes depth > h1
@@ -91,7 +89,6 @@ double get_take_off_angle(double depth, double v1, double v2, double h1, double 
             tu = tm;
         else
             tl = tm;
-        // printf("x = %lf\n", x);
     }
     return tm;
 }
@@ -110,7 +107,6 @@ double get_take_off_angle_Model(double depth, Model * vel, const int n, double D
             tu = tm;
         else
             tl = tm;
-        // printf("x = %lf\n", x);
     }
     return tm;
 }
@@ -172,14 +168,11 @@ int plot_traveltime(Model * vel, const int n, const double depth)
         fprintf(fp0, "o1y = 0.0\n");
         fprintf(fp0, "set origin o1x, o1y\n");
         // subplot 1
-        // fprintf(fp0, "set size ratio 1.\n");
-        // fprintf(fp0, "set origin 0,0\n");
         fprintf(fp0, "%s\n", "set xlabel \"{/Times-Italic {/Symbol D}} ({/Times-Italic km})\"");
         fprintf(fp0, "%s\n", "set ylabel \"{/Times-Italic Traveltime}  ({/Times-Italic s})\"");
         fprintf(fp0, "set xrange [0:1000]\n");
         fprintf(fp0, "plot \"pg.dat\" with lines title \"P_g\" lc \"black\"\n");
         // subplot 2
-        // fprintf(fp0, "set origin 800,30\n");
         fprintf(fp0, "set size s1x*0.5, s1y*0.5\n");
         fprintf(fp0, "set origin o1x+s1x, o1y+s1y*0.1\n");
         fprintf(fp0, "%s\n", "set xlabel \"{/Times-Italic {v_p}} ({/Times-Italic km/s})\"");
@@ -200,7 +193,6 @@ int plot_traveltime(Model * vel, const int n, const double depth)
         fprintf(fp0, "set label \"hypocentre\" at 0.2,220\n");
         fprintf(fp0, "plot NaN t '', \"+\" using (8.5):(220) notitle lt 3 lc \"black\"\n");
         
-        // fprintf(fp0, "plot us (8.75):(220) pt 3 lc 3\n");
         fclose(fp0);
     }
     else
@@ -213,27 +205,7 @@ int plot_traveltime(Model * vel, const int n, const double depth)
     system("open pg2.pdf");
     return 0;
 }
-/*
-int main()
-{
-    double depth = 25;
-    double v1 = 4;
-    double v2 = 6;
-    double h1 = 15;
-    double x, t;
-    double theta;
-    double Delta = 10;
-    theta = get_take_off_angle(depth, v1, v2, h1, Delta, &t);
-    
-    //srand((time(NULL)));
-    //int a = rand() % 1000;
-    //printf("rand = %d\n", a);
-    // get_horizontal_distance_and_traveltime(depth, theta, v1, v2, h1, &x, &t);
-    // printf("x = %lf, t = %lf\n", x, t);
-    printf("theta = %lf, traveltime = %lf\n", rad2deg(theta), t);
-    return 0;
-}
- */
+
 int main()
 {
     const int n = 5;
@@ -267,17 +239,8 @@ int main()
     double theta;
     double Delta = 1000;
     
-    //theta = 0.5;
-    // get_horizontal_distance_and_traveltime_Model(depth, theta, vel, n, &x, &t);
-   
     theta = get_take_off_angle(depth, v1, v2, h1, Delta, &t);
     printf("theta = %lf, traveltime = %lf, x = %lf\n", rad2deg(theta), t, x);
-    
-    //srand((time(NULL)));
-    //int a = rand() % 1000;
-    //printf("rand = %d\n", a);
-    // get_horizontal_distance_and_traveltime(depth, theta, v1, v2, h1, &x, &t);
-    // printf("x = %lf, t = %lf\n", x, t);
     
     theta = get_take_off_angle_Model(depth, vel, n, Delta, &t);
     printf("theta = %lf, traveltime = %lf, x = %lf\n", rad2deg(theta), t, x);
@@ -285,7 +248,3 @@ int main()
     free(vel);
     return 0;
 }
-
-/*
- gcc-11 -O3 bi.c && ./a.out
- */
